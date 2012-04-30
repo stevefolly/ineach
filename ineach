@@ -1,7 +1,9 @@
 #!/bin/sh
 
 if [ -z "$1" ] ; then
-  echo "usage: ineach [dir ...] -- command(s)"
+  echo "usage:"
+  echo "    ineach [dir ...] -- command(s)   : execute in each dir sequentially"
+  echo "    ineach [dir ...] --p command(s)  : execute in each dir in parallel"
   echo "enclose command(s) in quotes if they could be interpreted by the shell too early"
   exit 0
 fi
@@ -14,6 +16,12 @@ while [ ! -z "$1" ] ; do
   if [ "$1" == "--" ] ; then
     shift
     COMMAND=$*
+    break
+  fi
+
+  if [ "$1" == "--p" ] ; then
+    shift
+    COMMAND="$* &"
     break
   fi
 
