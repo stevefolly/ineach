@@ -1,0 +1,37 @@
+#!/bin/sh
+
+if [ -z "$1" ] ; then
+  echo "usage: ineach [dir ...] -- command(s)"
+  echo "enclose command(s) in quotes if they could be interpreted by the shell too early"
+  exit 0
+fi
+
+DIRS=""
+COMMAND=""
+
+while [ ! -z "$1" ] ; do
+
+  if [ "$1" == "--" ] ; then
+    shift
+    COMMAND=$*
+    break
+  fi
+
+  DIRS="${DIRS} $1"
+  shift
+
+done
+
+
+for DIR in ${DIRS} ; do
+  if [ -d ${DIR} ] ; then
+    echo "********** in ${DIR}"
+    ( cd ${DIR} 
+    eval ${COMMAND}
+    )
+    echo
+  else
+    echo "********** warning: ${DIR} is not a directory"
+    echo
+  fi
+done
